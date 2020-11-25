@@ -5,7 +5,7 @@
 # Demostração Moto do povo
 DEMO: https://nove-d5e61.firebaseapp.com
 
-## Tecnologias usadas
+### Tecnologias usadas
 React JS
 Firebase RealTime-Database
 Firebase Authentication
@@ -28,4 +28,4 @@ Firebase Authentication
 ### Desenvolvedor
 Mauricio Heck Marques
 mauricio.marques888@gmail.com
-"# motodopovo"
+
