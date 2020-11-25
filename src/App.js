@@ -1,8 +1,10 @@
 import React, { useLayoutEffect, useState } from 'react'
-import { BrowserRouter, HashRouter, Switch, Route, Redirect } from 'react-router-dom'
+import { HashRouter, Switch, Route, Redirect } from 'react-router-dom'
 import Login from './pages/Login'
 import Menu from './pages/Menu'
-
+import Home from './pages/Home'
+import NovoCadastro from './pages/NovoCadastro'
+import AnuncioCompleto  from './pages/AnuncioCompleto'
 import Firebase from './services/FirebaseConnect'
 
 export default function App() {
@@ -42,8 +44,12 @@ export default function App() {
   return (
     <HashRouter>
       <Switch>
-        <Route path="/" exact={true} component={Login} />
+        <Route path="/" exact={true} component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/novaconta" component={NovoCadastro} />
+        <Route path="/anunciocompleto" component={AnuncioCompleto} />
         <PrivateRoute path="/menu" component={Menu} />
+
 
       </Switch>
 

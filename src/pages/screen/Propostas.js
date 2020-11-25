@@ -1,13 +1,11 @@
 import React, { useState, useLayoutEffect } from 'react'
 import {
-    Button,
+    IconButton,
     Grid,
     Paper,
 }
     from '@material-ui/core';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import DeleteIcon from '@material-ui/icons/Delete';
-
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -16,15 +14,29 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Firebase from '../../services/FirebaseConnect'
 
-export default function PostoPolicialLista(props) {
+export default function Propostas(props) {
 
     const [lista, setLista] = useState([])
 
     useLayoutEffect(() => {
 
+            Firebase
+                .auth()
+                .onAuthStateChanged(user => {
+                    if (user !== null) {
+                        BuscarPropostas(user.uid)
+                    }
+                })
+
+
+
+    }, [])
+
+    function BuscarPropostas(id) {
+        console.log('buscando propostas...')
         Firebase
             .database()
-            .ref(`/postopolicial`)
+            .ref(`/propostas/${id}`)
             .on('value', snapchot => {
                 // converter objetos em listas
                 if (snapchot.val()) {
@@ -34,21 +46,12 @@ export default function PostoPolicialLista(props) {
                         return { ...dados[key], id: key }
                     })
                     setLista(lista)
-                } else{
+                } else {
                     setLista([])
                 }
             })
-
-    }, [])
-
-
-    const excluir = (item) => {
-        Firebase
-            .database()
-            .ref(`/postopolicial/${item.id}`)
-            .remove()
-
     }
+
 
     return (
         <Grid container spacing={1} >
@@ -57,24 +60,25 @@ export default function PostoPolicialLista(props) {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Posto Policial</TableCell>
-                                <TableCell align="right">Opções</TableCell>
+                                <TableCell>Proposta</TableCell>
+                                 <TableCell>Contato</TableCell>
+
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {lista.map((item, key) => {
                                 return <TableRow key={key}>
                                     <TableCell component="th" scope="row">
-                                        {item.local}
+                                        {item.proposta}
+                                    </TableCell>
+                                    <TableCell component="th" scope="row">
+                                        {item.nome} -  {item.telefone}
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button
-                                            variant="contained"
-                                            onClick={() => excluir(item)}
-                                            color="primary"
-                                            startIcon={<DeleteIcon />}>
-                                            Excluir
-                                        </Button>
+                                        <IconButton color="primary" onClick={() => { window.open(`https://api.whatsapp.com/send?phone=${item.telefone}&text=oi`)}} aria-label="upload picture" component="span">
+                                            <WhatsAppIcon />
+                                        </IconButton>
+
                                     </TableCell>
                                 </TableRow>
                             }
@@ -82,16 +86,6 @@ export default function PostoPolicialLista(props) {
                         </TableBody>
                     </Table>
                 </TableContainer>
-            </Grid>
-            <Grid item sm={12} xs={12}>
-                <Button
-                    variant="contained"
-                    onClick={() => props.setScreen(4)}
-                    color="primary"
-                    startIcon={<AddCircleIcon />}>
-                    Novo Registro
-                    </Button>
-
             </Grid>
 
 

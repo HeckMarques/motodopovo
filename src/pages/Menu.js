@@ -4,8 +4,10 @@ import {
     Button,
     Grid,
     Paper,
-    TextField,
-    Checkbox,
+    AppBar,
+    Toolbar,
+    Typography,
+    makeStyles,
     MenuList,
     MenuItem,
 }
@@ -13,18 +15,29 @@ import {
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { useHistory } from "react-router-dom";
 import Firebase from '../services/FirebaseConnect'
-import CrimeRegistro from './screen/CrimeRegistro'
-import CrimeLista from './screen/CrimeLista'
-import PostoPolicialRegistro from './screen/PostoPolicialRegistro'
-import PostoPolicialLista from './screen/PostoPolicialLista'
+import NovoAnuncio from './screen/NovoAnuncio'
+import ListaAnuncios from './screen/ListaAnuncios'
+import Propostas from './screen/Propostas'
+import MinhaConta from './screen/MinhaConta'
 
 
 
+const useStyles = makeStyles((theme) => ({
+    root: {
+        flexGrow: 1,
+    },
+    menuButton: {
+        marginRight: theme.spacing(2),
+    },
+    title: {
+        flexGrow: 1,
+    },
+}));
 
 export default function Menu() {
     let history = useHistory();
-
-    const [screen, setScreen] = useState(0)
+    const classes = useStyles();
+    const [screen, setScreen] = useState(1)
 
     const logoff = () => {
         sessionStorage.removeItem("uuid")
@@ -32,7 +45,7 @@ export default function Menu() {
             .auth()
             .signOut()
             .then(() => {
-                history.push("/");
+                history.push("/login");
             }).catch(() => {
                 history.push("/");
             })
@@ -40,26 +53,33 @@ export default function Menu() {
 
     return (
         <div>
-            <Grid container spacing={1}>
-                <Grid item sm={10} xs={12}>
-
-                </Grid>
-                <Grid item sm={2} xs={12}>
-                    <Button
-                        onClick={logoff}
-                        variant="contained"
-                        color="primary"
-                        startIcon={<ExitToAppIcon />}>
-                        Logoff
+            <div className={classes.root}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <img width="50" height="50" style={{ marginRight: "10px" }} src="../moto2.png"></img>
+                        <Typography variant="h6" className={classes.title}>
+                            Moto do Povo
+          </Typography>
+                        <Button
+                            onClick={logoff}
+                            variant="contained"
+                            color="primary"
+                            startIcon={<ExitToAppIcon />}>
+                            Logoff
                     </Button>
-                </Grid>
+                    </Toolbar>
+                </AppBar>
+            </div>
+            <Grid container spacing={1} style={{ marginTop: "20px" }}>
+
+
                 <Grid item sm={2} xs={12}>
                     <Grid item sm={12} xs={12}>
                         <Paper>
                             <MenuList>
-                                <MenuItem onClick={() => setScreen(1)}>CRIMES</MenuItem>
-                                <MenuItem onClick={() => setScreen(3)}>POSTO POLICIAL</MenuItem>
-                                <MenuItem onClick={() => setScreen(0)}>OUTRA COISA</MenuItem>
+                                <MenuItem onClick={() => setScreen(1)}>Meus anúncios</MenuItem>
+                                <MenuItem onClick={() => setScreen(3)}>Propostas</MenuItem>
+                                <MenuItem onClick={() => setScreen(0)}>Minha conta</MenuItem>
                             </MenuList>
                         </Paper>
                     </Grid>
@@ -67,21 +87,16 @@ export default function Menu() {
                 <Grid item sm={10} xs={12}>
                     <Paper>
                         {screen == 0 &&
-                            <>
-                                Nenhuma opção selecionada
-                            </>
+                            <MinhaConta setScreen={setScreen} />
                         }
                         {screen == 1 &&
-                            <CrimeLista setScreen={setScreen} />
+                            <ListaAnuncios setScreen={setScreen} />
                         }
                         {screen == 2 &&
-                            <CrimeRegistro setScreen={setScreen} />
+                            <NovoAnuncio setScreen={setScreen} />
                         }
                         {screen == 3 &&
-                            <PostoPolicialLista setScreen={setScreen} />
-                        }
-                        {screen == 4 &&
-                            <PostoPolicialRegistro setScreen={setScreen} />
+                            <Propostas setScreen={setScreen} />
                         }
 
                     </Paper>

@@ -9,6 +9,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
 
 import Table from '@material-ui/core/Table';
+import IconButton from '@material-ui/core/IconButton'
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
@@ -16,15 +17,29 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Firebase from '../../services/FirebaseConnect'
 
-export default function CrimeLista(props) {
+export default function ListaAnuncios(props) {
 
     const [lista, setLista] = useState([])
+    const [idUser, setIdUser] = useState("")
 
     useLayoutEffect(() => {
+        Firebase
+            .auth()
+            .onAuthStateChanged(user => {
+                if (user !== null) {
+                    setIdUser(user.uid)
+                    console.log('tem user em crimeLista')
+                    buscarAnuncios(user.uid)
+                }
+            })
 
+    }, [])
+
+    const buscarAnuncios = (id) => {
+        console.log('Buscando anuncios ...')
         Firebase
             .database()
-            .ref(`/ocorrencias`)
+            .ref(`/anuncios/${id}`)
             .on('value', snapchot => {
                 // converter objetos em listas
                 if (snapchot.val()) {
@@ -34,19 +49,22 @@ export default function CrimeLista(props) {
                         return { ...dados[key], id: key }
                     })
                     setLista(lista)
-                } else{
+                } else {
                     setLista([])
                 }
             })
+    }
 
-    }, [])
 
-
-    const excluir = (item) => {
-        Firebase
+    const excluir = async (item) => {
+        await Firebase
             .database()
-            .ref(`/ocorrencias/${item.id}`)
+            .ref(`/anuncios/${idUser}/${item.id}`)
             .remove()
+        setTimeout(() => {
+            buscarAnuncios(idUser)
+        }, 200);
+
 
     }
 
@@ -57,28 +75,33 @@ export default function CrimeLista(props) {
                     <Table aria-label="simple table">
                         <TableHead>
                             <TableRow>
-                                <TableCell>Ocorrencia</TableCell>
-                                <TableCell align="right">Local</TableCell>
-                                <TableCell align="right">Data</TableCell>
-                                <TableCell align="right">Opções</TableCell>
+                                <TableCell>Imagem</TableCell>
+                                <TableCell align="right">Modelo</TableCell>
+                                <TableCell align="right">Marca</TableCell>
+                                <TableCell align="right">Preço</TableCell>
+                                <TableCell align="right">ano</TableCell>
+                                <TableCell align="right">opções</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {lista.map((item, key) => {
                                 return <TableRow key={key}>
                                     <TableCell component="th" scope="row">
-                                        {item.ocorrencia}
+                                        {item.imagem !== '' ?
+                                            <>
+                                                <img width="60" height="40" style={{ marginLeft: "5px" }} src={item.imagem}></img>
+                                            </> : <> Sem imagem </>
+                                        }
                                     </TableCell>
-                                    <TableCell align="right">{item.local}</TableCell>
-                                    <TableCell align="right">{item.data}</TableCell>
+                                    <TableCell align="right">{item.modelo}</TableCell>
+                                    <TableCell align="right">{item.marca}</TableCell>
+                                    <TableCell align="right">{item.preco}</TableCell>
+                                    <TableCell align="right">{item.ano}</TableCell>
                                     <TableCell align="right">
-                                        <Button
-                                            variant="contained"
-                                            onClick={() => excluir(item)}
-                                            color="primary"
-                                            startIcon={<DeleteIcon />}>
-                                            Excluir
-                                        </Button>
+                                        <IconButton onClick={() => excluir(item)} color="secondary" aria-label="upload picture" component="span">
+                                            <DeleteIcon />
+                                        </IconButton>
+
                                     </TableCell>
                                 </TableRow>
                             }
@@ -93,7 +116,7 @@ export default function CrimeLista(props) {
                     onClick={() => props.setScreen(2)}
                     color="primary"
                     startIcon={<AddCircleIcon />}>
-                    Novo Registro
+                    Novo anúncio
                     </Button>
 
             </Grid>
