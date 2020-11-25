@@ -1,6 +1,6 @@
 
 # Projeto Final de React WEB
-# Desenvovlido no curso de Sistemas de Informação IMED
+# Desenvolvido no curso de Sistemas de Informação IMED
 
 Demostração: https://nove-d5e61.firebaseapp.com
 
