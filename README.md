@@ -6,8 +6,8 @@
 DEMO: https://nove-d5e61.firebaseapp.com
 
 ### Tecnologias usadas
-React JS
-Firebase RealTime-Database
+React JS<br/>
+Firebase RealTime-Database<br/>
 Firebase Authentication
 
 ### Dependencias
