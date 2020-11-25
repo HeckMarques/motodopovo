@@ -1,5 +1,8 @@
 
-# Projeto Final de React WEB
+# Moto do povo
+Visualizar anúncios de motos, cadastro de usuário e login, cadastro de anuncios.<br/>
+Enviar proposta para vendedor e receber proposta no dashboard.
+
 # Desenvolvido no curso de Sistemas de Informação IMED
 
 Demostração: https://nove-d5e61.firebaseapp.com
@@ -16,7 +19,6 @@ Firebase Authentication
     "@testing-library/react": "^11.1.0",
     "@testing-library/user-event": "^12.1.10",
     "firebase": "^8.0.1",
-    "google-map-react": "^2.1.9",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
