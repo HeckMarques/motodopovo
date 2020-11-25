@@ -2,8 +2,7 @@
 # Projeto Final de React WEB
 # Desenvovlido no curso de Sistemas de Informação IMED
 
-# Demostração Moto do povo
-DEMO: https://nove-d5e61.firebaseapp.com
+Demostração: https://nove-d5e61.firebaseapp.com
 
 ### Tecnologias usadas
 React JS<br/>
